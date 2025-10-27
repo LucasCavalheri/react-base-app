@@ -3,7 +3,8 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail
+  SidebarRail,
+  SidebarSeparator
 } from './ui/sidebar'
 import { SidebarAppHeader } from './sidebar/sidebar-app-header'
 import { SidebarAppContent } from './sidebar/sidebar-app-content'
@@ -21,9 +22,11 @@ export function AppSidebar({ user, logout, ...props }: AppSidebarProps) {
       <SidebarHeader>
         <SidebarAppHeader />
       </SidebarHeader>
+      <SidebarSeparator />
       <SidebarContent>
         <SidebarAppContent />
       </SidebarContent>
+      <SidebarSeparator />
       <SidebarFooter className="flex flex-col">
         <SidebarAppFooter user={user} logout={logout} />
       </SidebarFooter>
