@@ -21,7 +21,7 @@ import {
 } from '@/schemas/auth/register-schema'
 import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
-import { useGoogle } from '@/hooks/useGoogle'
+import { useGoogle } from '@/hooks/use-google'
 
 export function RegisterPage() {
   const { register } = useAuth()

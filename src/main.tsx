@@ -2,10 +2,10 @@ import './index.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { App } from './app'
-import { Toaster } from './components/ui/sonner'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { Toaster } from './components/ui/sonner'
 import { env } from './env'
+import { App } from './app'
 
 const queryClient = new QueryClient()
 

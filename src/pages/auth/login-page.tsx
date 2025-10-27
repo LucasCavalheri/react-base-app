@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
-import { useGoogle } from '@/hooks/useGoogle'
+import { useGoogle } from '@/hooks/use-google'
 
 export function LoginPage() {
   const { login } = useAuth()
