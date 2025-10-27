@@ -9,8 +9,8 @@ export function AuthLayout() {
   }
 
   return (
-    <div className="min-h-dvh grid place-items-center bg-background">
-      <div className="w-full max-w-[420px] px-4">
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-4xl">
         <Outlet />
       </div>
     </div>
