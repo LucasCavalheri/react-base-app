@@ -21,6 +21,7 @@ import { toast } from 'sonner'
 import { useUpdateProfile } from '@/http/api/hooks/users/use-update-profile'
 import { useAuth } from '@/contexts/auth-context'
 import { cn } from '@/lib/utils'
+import type { User } from '@/models/user'
 
 export function ProfileInformation() {
   const { user, setUser } = useAuth()
@@ -43,8 +44,16 @@ export function ProfileInformation() {
   const handleSaveProfile = async (data: UpdateProfileSchema) => {
     try {
       const response = await updateProfileMutateAsync(data)
+
+      const updatedUser: User = {
+        ...response.user,
+        authAccounts: response.user.authAccounts?.length
+          ? response.user.authAccounts
+          : user?.authAccounts ?? []
+      }
+
+      setUser(updatedUser)
       toast.success('Perfil atualizado com sucesso')
-      setUser(response.user)
       profileForm.reset({
         name: response.user.name,
         email: response.user.email

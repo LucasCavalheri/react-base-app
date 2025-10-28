@@ -1,7 +1,20 @@
 import { motion } from 'framer-motion'
-import { CheckCircle2, Crown, PartyPopper, Sparkles, Star, Shield } from 'lucide-react'
+import {
+  CheckCircle2,
+  Crown,
+  PartyPopper,
+  Sparkles,
+  Star,
+  Shield
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 import { useAuth } from '@/contexts/auth-context'
 import { Link } from 'react-router'
 
@@ -62,7 +75,8 @@ export function SuccessPage() {
           Assinatura PRO Ativada!
         </h1>
         <p className="text-muted-foreground text-lg">
-          {user?.name ? `${user.name}, ` : ''}obrigado por apoiar nosso trabalho. Seu plano PRO já está ativo.
+          {user?.name ? `${user.name}, ` : ''}obrigado por apoiar nosso
+          trabalho. Seu plano PRO já está ativo.
         </p>
       </motion.div>
 
@@ -82,28 +96,36 @@ export function SuccessPage() {
               <Shield className="h-5 w-5 shrink-0 text-primary" />
               <div>
                 <div className="font-medium">Acesso prioritário</div>
-                <div className="text-sm text-muted-foreground">Atendimento mais rápido e dedicado.</div>
+                <div className="text-sm text-muted-foreground">
+                  Atendimento mais rápido e dedicado.
+                </div>
               </div>
             </div>
             <div className="flex items-start gap-3 rounded-lg border p-4">
               <Star className="h-5 w-5 shrink-0 text-primary" />
               <div>
                 <div className="font-medium">Funcionalidades PRO</div>
-                <div className="text-sm text-muted-foreground">Relatórios, integrações e muito mais.</div>
+                <div className="text-sm text-muted-foreground">
+                  Relatórios, integrações e muito mais.
+                </div>
               </div>
             </div>
             <div className="flex items-start gap-3 rounded-lg border p-4">
               <Sparkles className="h-5 w-5 shrink-0 text-primary" />
               <div>
                 <div className="font-medium">Experiência premium</div>
-                <div className="text-sm text-muted-foreground">Mais performance e novidades primeiro.</div>
+                <div className="text-sm text-muted-foreground">
+                  Mais performance e novidades primeiro.
+                </div>
               </div>
             </div>
             <div className="flex items-start gap-3 rounded-lg border p-4">
               <Crown className="h-5 w-5 shrink-0 text-primary" />
               <div>
                 <div className="font-medium">Seu apoio importa</div>
-                <div className="text-sm text-muted-foreground">Obrigado por fortalecer o projeto.</div>
+                <div className="text-sm text-muted-foreground">
+                  Obrigado por fortalecer o projeto.
+                </div>
               </div>
             </div>
           </CardContent>

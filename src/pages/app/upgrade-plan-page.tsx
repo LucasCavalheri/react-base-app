@@ -20,7 +20,12 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { Field, FieldContent, FieldLabel } from '@/components/ui/field'
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel
+} from '@/components/ui/field'
 import { Separator } from '@/components/ui/separator'
 import { useForm } from 'react-hook-form'
 import {
@@ -32,6 +37,9 @@ import { useCreateSubscription } from '@/http/api/hooks/subscription/use-create-
 import { isAxiosError } from 'axios'
 import { toast } from 'sonner'
 import { useHookFormMask } from 'use-mask-input'
+import { useAuth } from '@/contexts/auth-context'
+import { UserPlan } from '@/types/user/user-plan'
+import { Navigate } from 'react-router'
 
 const proFeatures = [
   'Acesso ilimitado a todas as funcionalidades',
@@ -73,6 +81,12 @@ const sparkleAnimation = {
 }
 
 export function UpgradePlanPage() {
+  const { user } = useAuth()
+
+  if (user?.plan === UserPlan.PRO) {
+    return <Navigate to="/" />
+  }
+
   const form = useForm<CreateSubscriptionSchema>({
     resolver: zodResolver(createSubscriptionSchema)
   })
@@ -270,6 +284,9 @@ export function UpgradePlanPage() {
                         )}
                       />
                     </div>
+                    <FieldError>
+                      {form.formState.errors.document?.message}
+                    </FieldError>
                   </FieldContent>
                 </Field>
 
@@ -288,6 +305,9 @@ export function UpgradePlanPage() {
                         })}
                       />
                     </div>
+                    <FieldError>
+                      {form.formState.errors.phone?.message}
+                    </FieldError>
                   </FieldContent>
                 </Field>
 
