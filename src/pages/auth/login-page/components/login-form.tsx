@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator
@@ -80,12 +81,17 @@ export function LoginForm() {
             )}
             {...form.register('email')}
           />
+          {form.formState.errors.email && (
+            <FieldError className="text-destructive">
+              {form.formState.errors.email.message}
+            </FieldError>
+          )}
         </Field>
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="password">Senha</FieldLabel>
             <Link
-              to="#"
+              to="/forgot-password"
               className="ml-auto text-sm underline-offset-2 hover:underline"
             >
               Esqueceu sua senha?
@@ -111,9 +117,9 @@ export function LoginForm() {
               )}
             </div>
             {form.formState.errors.password && (
-              <FieldDescription className="text-destructive">
+              <FieldError className="text-destructive">
                 {form.formState.errors.password.message}
-              </FieldDescription>
+              </FieldError>
             )}
           </div>
         </Field>

@@ -40,6 +40,7 @@ import { useHookFormMask } from 'use-mask-input'
 import { useAuth } from '@/contexts/auth-context'
 import { UserPlan } from '@/types/user/user-plan'
 import { Navigate } from 'react-router'
+import { useEffect } from 'react'
 
 const proFeatures = [
   'Acesso ilimitado a todas as funcionalidades',
@@ -88,7 +89,11 @@ export function UpgradePlanPage() {
   }
 
   const form = useForm<CreateSubscriptionSchema>({
-    resolver: zodResolver(createSubscriptionSchema)
+    resolver: zodResolver(createSubscriptionSchema),
+    defaultValues: {
+      document: user?.document || '',
+      phone: user?.phone || ''
+    }
   })
 
   const registerWithMask = useHookFormMask(form.register)
@@ -110,6 +115,15 @@ export function UpgradePlanPage() {
       }
     }
   }
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        document: user.document || '',
+        phone: user.phone || ''
+      })
+    }
+  }, [user, form])
 
   return (
     <motion.div
@@ -331,9 +345,7 @@ export function UpgradePlanPage() {
                   <Button
                     type="submit"
                     className="w-full h-12 text-lg"
-                    disabled={
-                      isPendingCreateSubscription || !form.formState.isValid
-                    }
+                    disabled={isPendingCreateSubscription}
                   >
                     {isPendingCreateSubscription ? (
                       <motion.div

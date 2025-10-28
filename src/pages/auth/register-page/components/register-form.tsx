@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator
@@ -84,9 +85,9 @@ export function RegisterForm() {
             {...form.register('name')}
           />
           {form.formState.errors.name && (
-            <FieldDescription className="text-destructive">
+            <FieldError className="text-destructive">
               {form.formState.errors.name.message}
-            </FieldDescription>
+            </FieldError>
           )}
         </Field>
         <Field>
@@ -103,9 +104,9 @@ export function RegisterForm() {
             {...form.register('email')}
           />
           {form.formState.errors.email && (
-            <FieldDescription className="text-destructive">
+            <FieldError className="text-destructive">
               {form.formState.errors.email.message}
-            </FieldDescription>
+            </FieldError>
           )}
         </Field>
         <Field>
@@ -138,9 +139,9 @@ export function RegisterForm() {
               )}
             </div>
             {form.formState.errors.password && (
-              <FieldDescription className="text-destructive">
+              <FieldError className="text-destructive">
                 {form.formState.errors.password.message}
-              </FieldDescription>
+              </FieldError>
             )}
           </div>
         </Field>

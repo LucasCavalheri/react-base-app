@@ -9,6 +9,8 @@ import { UpgradePlanPage } from './pages/app/upgrade-plan-page'
 import { SuccessPage } from './pages/app/success-page'
 import { ProfilePage } from './pages/app/profile-page'
 import { NotFoundPage } from './pages/not-found-page'
+import { ForgotPasswordPage } from './pages/auth/forgot-password-page'
+import { ResetPasswordPage } from './pages/auth/reset-password-page'
 
 export function Router() {
   return (
@@ -24,6 +26,8 @@ export function Router() {
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

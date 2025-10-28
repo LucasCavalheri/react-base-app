@@ -1,5 +1,14 @@
 import { useState } from 'react'
-import { Edit3, Loader2, Mail, Save, UserIcon, X } from 'lucide-react'
+import {
+  Edit3,
+  IdCard,
+  Loader2,
+  Mail,
+  Phone,
+  Save,
+  UserIcon,
+  X
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,6 +30,7 @@ import { toast } from 'sonner'
 import { useUpdateProfile } from '@/http/api/hooks/users/use-update-profile'
 import { useAuth } from '@/contexts/auth-context'
 import { cn } from '@/lib/utils'
+import { useHookFormMask } from 'use-mask-input'
 import type { User } from '@/models/user'
 
 export function ProfileInformation() {
@@ -32,9 +42,13 @@ export function ProfileInformation() {
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       name: user?.name,
-      email: user?.email
+      email: user?.email,
+      whatsapp: user?.phone || '',
+      document: user?.document || ''
     }
   })
+
+  const registerWithMask = useHookFormMask(profileForm.register)
 
   const {
     mutateAsync: updateProfileMutateAsync,
@@ -56,7 +70,9 @@ export function ProfileInformation() {
       toast.success('Perfil atualizado com sucesso')
       profileForm.reset({
         name: response.user.name,
-        email: response.user.email
+        email: response.user.email,
+        whatsapp: response.user.phone,
+        document: response.user.document
       })
     } catch (error) {
       if (isAxiosError(error)) {
@@ -67,7 +83,9 @@ export function ProfileInformation() {
           })
           profileForm.reset({
             name: user?.name,
-            email: user?.email
+            email: user?.email,
+            whatsapp: user?.phone,
+            document: user?.document
           })
           return toast.error('Email já cadastrado', {
             description: 'Este email já está cadastro por outro usuário'
@@ -75,7 +93,9 @@ export function ProfileInformation() {
         }
         profileForm.reset({
           name: user?.name,
-          email: user?.email
+          email: user?.email,
+          whatsapp: user?.phone,
+          document: user?.document
         })
         return toast.error('Houve um erro ao atualizar o perfil', {
           description: 'Por favor tente novamente mais tarde'
@@ -160,6 +180,62 @@ export function ProfileInformation() {
             {profileForm.formState.errors.email && (
               <FieldError className="-mt-2">
                 {profileForm.formState.errors.email.message}
+              </FieldError>
+            )}
+          </Field>
+
+          <Field className="mt-5">
+            <FieldLabel htmlFor="whatsapp" className="-mb-2">
+              WhatsApp
+            </FieldLabel>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="whatsapp"
+                type="tel"
+                disabled={!isEditing}
+                className={cn(
+                  'pl-9',
+                  profileForm.formState.errors.whatsapp && 'border-destructive'
+                )}
+                {...registerWithMask('whatsapp', ['(99) 99999-9999'], {
+                  jitMasking: true
+                })}
+              />
+            </div>
+            {profileForm.formState.errors.whatsapp && (
+              <FieldError className="-mt-2">
+                {profileForm.formState.errors.whatsapp.message}
+              </FieldError>
+            )}
+          </Field>
+
+          <Field className="mt-5">
+            <FieldLabel htmlFor="document" className="-mb-2">
+              Documento
+            </FieldLabel>
+            <div className="relative">
+              <IdCard className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="document"
+                type="text"
+                disabled={!isEditing}
+                className={cn(
+                  'pl-9',
+                  profileForm.formState.errors.document && 'border-destructive'
+                )}
+                {...registerWithMask(
+                  'document',
+                  ['999.999.999-99', '99.999.999/9999-99'],
+                  {
+                    jitMasking: true
+                  }
+                )}
+              />
+            </div>
+            {profileForm.formState.errors.document && (
+              <FieldError className="-mt-2">
+                {profileForm.formState.errors.document.message}
               </FieldError>
             )}
           </Field>
