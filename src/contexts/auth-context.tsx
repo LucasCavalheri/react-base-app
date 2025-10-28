@@ -45,7 +45,6 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate()
-
   const login = useLogin()
   const register = useRegister()
   const googleOAuth = useGoogleOAuth()
@@ -55,20 +54,19 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Verifica a sessão automaticamente ao montar
+  // Verifica sessão ao montar
   useEffect(() => {
     async function fetchProfile() {
       setIsLoading(true)
       try {
         const { data } = await profile.refetch()
-        setUser(data?.user!)
+        setUser(data?.user ?? null)
       } catch {
         setUser(null)
       } finally {
         setIsLoading(false)
       }
     }
-
     fetchProfile()
   }, [])
 
@@ -88,7 +86,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   async function handleGoogleOAuth(credential: string) {
     const res = await googleOAuth.mutateAsync(credential)
-    setUser(res.user)
+
+    const { data: profileData } = await profile.refetch()
+    setUser(profileData?.user ?? null)
     navigate('/dashboard')
     return res
   }
@@ -99,27 +99,25 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     navigate('/login')
   }
 
-  const value: AuthContextType = {
-    user,
-    setUser,
-    isAuthenticated: !!user,
-    isLoading,
-    login: {
-      execute: handleLogin,
-      isPending: login.isPending
-    },
-    register: {
-      execute: handleRegister,
-      isPending: register.isPending
-    },
-    googleOAuth: {
-      execute: handleGoogleOAuth,
-      isPending: googleOAuth.isPending
-    },
-    logout: handleLogout
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        isAuthenticated: !!user,
+        isLoading,
+        login: { execute: handleLogin, isPending: login.isPending },
+        register: { execute: handleRegister, isPending: register.isPending },
+        googleOAuth: {
+          execute: handleGoogleOAuth,
+          isPending: googleOAuth.isPending
+        },
+        logout: handleLogout
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export const useAuth = () => {

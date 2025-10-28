@@ -164,9 +164,24 @@ export function ForgotPasswordForm() {
                   'w-full',
                   form.formState.errors.identifier && 'border-destructive'
                 )}
-                {...registerWithMask('identifier', ['(99) 99999-9999'], {
-                  jitMasking: true
-                })}
+                value={form.getValues('identifier')}
+                onChange={(e) => {
+                  let value = e.target.value.replace(/\D/g, '') // remove tudo que não é número
+                  if (value.length > 11) value = value.slice(0, 11)
+
+                  if (value.length > 6) {
+                    value = `(${value.slice(0, 2)}) ${value.slice(
+                      2,
+                      7
+                    )}-${value.slice(7)}`
+                  } else if (value.length > 2) {
+                    value = `(${value.slice(0, 2)}) ${value.slice(2)}`
+                  } else if (value.length > 0) {
+                    value = `(${value}`
+                  }
+
+                  form.setValue('identifier', value, { shouldValidate: true })
+                }}
               />
               {!form.formState.errors.identifier && (
                 <FieldDescription>

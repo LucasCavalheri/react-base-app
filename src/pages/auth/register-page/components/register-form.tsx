@@ -112,12 +112,6 @@ export function RegisterForm() {
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="password">Senha</FieldLabel>
-            <Link
-              to="#"
-              className="ml-auto text-sm underline-offset-2 hover:underline"
-            >
-              Esqueceu sua senha?
-            </Link>
           </div>
           <div>
             <div className="flex flex-col gap-1">
