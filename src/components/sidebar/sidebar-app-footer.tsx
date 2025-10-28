@@ -17,6 +17,7 @@ import {
 } from '../ui/sidebar'
 import { Link } from 'react-router'
 import { useAuth } from '@/contexts/auth-context'
+import { UserPlan } from '@/types/user/user-plan'
 
 export const SidebarAppFooter = () => {
   const { user, logout } = useAuth()
@@ -71,12 +72,14 @@ export const SidebarAppFooter = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link to="/upgrade">
-                  <Sparkles className="mr-2 h-4 w-4 text-primary" />
-                  Upgrade para PRO
-                </Link>
-              </DropdownMenuItem>
+              {user?.plan === UserPlan.FREE && (
+                <DropdownMenuItem asChild>
+                  <Link to="/upgrade">
+                    <Sparkles className="mr-2 h-4 w-4 text-primary" />
+                    Upgrade para PRO
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem asChild>
                 <Link to="/profile">
                   <UserIcon className="mr-2 h-4 w-4" />

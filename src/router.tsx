@@ -6,7 +6,9 @@ import { HomePage } from './pages/app/home-page'
 import { RegisterPage } from './pages/auth/register-page'
 import { LoginPage } from './pages/auth/login-page'
 import { UpgradePlanPage } from './pages/app/upgrade-plan-page'
+import { SuccessPage } from './pages/app/success-page'
 import { ProfilePage } from './pages/app/profile-page'
+import { NotFoundPage } from './pages/not-found-page'
 
 export function Router() {
   return (
@@ -17,11 +19,13 @@ export function Router() {
             <Route path="/" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/upgrade" element={<UpgradePlanPage />} />
+            <Route path="/success" element={<SuccessPage />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

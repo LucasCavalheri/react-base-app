@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   CreditCard,
@@ -23,6 +22,16 @@ import {
 } from '@/components/ui/card'
 import { Field, FieldContent, FieldLabel } from '@/components/ui/field'
 import { Separator } from '@/components/ui/separator'
+import { useForm } from 'react-hook-form'
+import {
+  createSubscriptionSchema,
+  type CreateSubscriptionSchema
+} from '@/schemas/subscription/create-subscription-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCreateSubscription } from '@/http/api/hooks/subscription/use-create-payment'
+import { isAxiosError } from 'axios'
+import { toast } from 'sonner'
+import { useHookFormMask } from 'use-mask-input'
 
 const proFeatures = [
   'Acesso ilimitado a todas as funcionalidades',
@@ -32,63 +41,60 @@ const proFeatures = [
   'Backup automático na nuvem'
 ]
 
-export function UpgradePlanPage() {
-  const [formData, setFormData] = useState({
-    cpf: '',
-    phone: ''
-  })
-  const [isProcessing, setIsProcessing] = useState(false)
+const containerVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      staggerChildren: 0.15
+    }
+  }
+}
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.15
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 }
+  }
+}
+
+const sparkleAnimation = {
+  scale: [1, 1.2, 1],
+  rotate: [0, 180, 360],
+  transition: {
+    duration: 2,
+    repeat: Infinity,
+    ease: 'easeInOut' as const
+  }
+}
+
+export function UpgradePlanPage() {
+  const form = useForm<CreateSubscriptionSchema>({
+    resolver: zodResolver(createSubscriptionSchema)
+  })
+
+  const registerWithMask = useHookFormMask(form.register)
+
+  const {
+    mutateAsync: createSubscriptionMutate,
+    isPending: isPendingCreateSubscription
+  } = useCreateSubscription()
+
+  const handleSubmit = async (data: CreateSubscriptionSchema) => {
+    try {
+      const response = await createSubscriptionMutate(data)
+      window.location.href = response.data.url
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return toast.error('Houve um erro ao gerar link de pagamento', {
+          description: 'Por favor, tente novamente mais tarde'
+        })
       }
     }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 }
-    }
-  }
-
-  const sparkleAnimation = {
-    scale: [1, 1.2, 1],
-    rotate: [0, 180, 360],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: 'easeInOut' as const
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsProcessing(true)
-
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-
-    setIsProcessing(false)
-    // Handle payment success/error
-  }
-
-  const formatCPF = (value: string) => {
-    const numbers = value.replace(/\D/g, '')
-    return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-  }
-
-  const formatPhone = (value: string) => {
-    const numbers = value.replace(/\D/g, '')
-    return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
   }
 
   return (
@@ -241,25 +247,27 @@ export function UpgradePlanPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(handleSubmit)}
+                className="space-y-6"
+              >
                 <Field>
-                  <FieldLabel htmlFor="cpf">CPF</FieldLabel>
+                  <FieldLabel htmlFor="document">CPF/CNPJ</FieldLabel>
                   <FieldContent>
                     <div className="relative">
                       <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
-                        id="cpf"
-                        value={formData.cpf}
-                        onChange={(e) => {
-                          const formatted = formatCPF(e.target.value)
-                          if (formatted.length <= 14) {
-                            setFormData((prev) => ({ ...prev, cpf: formatted }))
-                          }
-                        }}
-                        placeholder="000.000.000-00"
+                        id="document"
+                        placeholder="Seu CPF ou CNPJ"
                         className="pl-9"
-                        maxLength={14}
                         required
+                        {...registerWithMask(
+                          'document',
+                          ['999.999.999-99', '99.999.999/9999-99'],
+                          {
+                            jitMasking: true
+                          }
+                        )}
                       />
                     </div>
                   </FieldContent>
@@ -272,20 +280,12 @@ export function UpgradePlanPage() {
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="phone"
-                        value={formData.phone}
-                        onChange={(e) => {
-                          const formatted = formatPhone(e.target.value)
-                          if (formatted.length <= 15) {
-                            setFormData((prev) => ({
-                              ...prev,
-                              phone: formatted
-                            }))
-                          }
-                        }}
-                        placeholder="(11) 99999-9999"
                         className="pl-9"
-                        maxLength={15}
+                        placeholder="Seu telefone"
                         required
+                        {...registerWithMask('phone', ['(99) 99999-9999'], {
+                          jitMasking: true
+                        })}
                       />
                     </div>
                   </FieldContent>
@@ -311,9 +311,11 @@ export function UpgradePlanPage() {
                   <Button
                     type="submit"
                     className="w-full h-12 text-lg"
-                    disabled={isProcessing || !formData.cpf || !formData.phone}
+                    disabled={
+                      isPendingCreateSubscription || !form.formState.isValid
+                    }
                   >
-                    {isProcessing ? (
+                    {isPendingCreateSubscription ? (
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{

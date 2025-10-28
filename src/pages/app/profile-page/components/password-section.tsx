@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { Eye, EyeOff, Loader, Loader2, Lock, Save, X } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Lock, Save, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import {
