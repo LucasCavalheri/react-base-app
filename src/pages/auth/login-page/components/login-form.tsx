@@ -1,8 +1,6 @@
 import { Link } from 'react-router'
 import { env } from '@/env'
-import { AppleIconSvg } from '@/components/svg/apple-icon-svg'
 import { GoogleIconSvg } from '@/components/svg/google-icon-svg'
-import { MetaIconSvg } from '@/components/svg/meta-icon-svg'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -127,17 +125,14 @@ export function LoginForm() {
             {form.formState.isSubmitting || login.isPending ? (
               <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              'Login'
+              'Entrar'
             )}
           </Button>
         </Field>
         <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
           Ou continue com
         </FieldSeparator>
-        <Field className="grid grid-cols-3 gap-4">
-          <Button variant="outline" type="button">
-            <AppleIconSvg />
-          </Button>
+        <Field className="grid grid-cols-1">
           <Button
             variant="outline"
             type="button"
@@ -145,9 +140,7 @@ export function LoginForm() {
             disabled={googleLogin.isPending}
           >
             <GoogleIconSvg />
-          </Button>
-          <Button variant="outline" type="button">
-            <MetaIconSvg />
+            Google
           </Button>
         </Field>
         <FieldDescription className="text-center">
