@@ -3,9 +3,10 @@ import { AuthProvider } from './contexts/auth-context'
 import { AppLayout } from './layouts/app-layout'
 import { AuthLayout } from './layouts/auth-layout'
 import { HomePage } from './pages/app/home-page'
-import { ProfilePage } from './pages/app/profile-page'
 import { RegisterPage } from './pages/auth/register-page'
 import { LoginPage } from './pages/auth/login-page'
+import { UpgradePlanPage } from './pages/app/upgrade-plan-page'
+import { ProfilePage } from './pages/app/profile-page'
 
 export function Router() {
   return (
@@ -15,6 +16,7 @@ export function Router() {
           <Route element={<AppLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/upgrade" element={<UpgradePlanPage />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />} />

@@ -23,6 +23,7 @@ import { useProfile } from '@/http/api/hooks/auth/use-profile'
 
 interface AuthContextType {
   user: User | null
+  setUser: (user: User | null) => void
   isAuthenticated: boolean
   isLoading: boolean
   login: {
@@ -100,6 +101,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const value: AuthContextType = {
     user,
+    setUser,
     isAuthenticated: !!user,
     isLoading,
     login: {

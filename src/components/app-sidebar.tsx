@@ -9,14 +9,10 @@ import {
 import { SidebarAppHeader } from './sidebar/sidebar-app-header'
 import { SidebarAppContent } from './sidebar/sidebar-app-content'
 import { SidebarAppFooter } from './sidebar/sidebar-app-footer'
-import type { User } from '@/models/user'
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: User
-  logout: () => void
-}
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {}
 
-export function AppSidebar({ user, logout, ...props }: AppSidebarProps) {
+export function AppSidebar({ ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -28,7 +24,7 @@ export function AppSidebar({ user, logout, ...props }: AppSidebarProps) {
       </SidebarContent>
       <SidebarSeparator />
       <SidebarFooter className="flex flex-col">
-        <SidebarAppFooter user={user} logout={logout} />
+        <SidebarAppFooter />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

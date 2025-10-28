@@ -1,8 +1,17 @@
 import { useAuth } from '@/contexts/auth-context'
+import { Loader2 } from 'lucide-react'
 import { Navigate, Outlet } from 'react-router'
 
 export function AuthLayout() {
-  const { isAuthenticated, user } = useAuth()
+  const { isAuthenticated, user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-svh items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   if (isAuthenticated || user) {
     return <Navigate to="/" />

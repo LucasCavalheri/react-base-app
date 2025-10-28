@@ -1,4 +1,4 @@
-import { ChevronsUpDown, LogOut, UserIcon } from 'lucide-react'
+import { ChevronsUpDown, LogOut, Sparkles, UserIcon } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import {
   DropdownMenu,
@@ -15,19 +15,15 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '../ui/sidebar'
-import type { User } from '@/models/user'
 import { Link } from 'react-router'
+import { useAuth } from '@/contexts/auth-context'
 
-interface SidebarAppFooter {
-  user: User
-  logout: () => void
-}
-
-export const SidebarAppFooter = ({ user, logout }: SidebarAppFooter) => {
+export const SidebarAppFooter = () => {
+  const { user, logout } = useAuth()
   const { isMobile } = useSidebar()
 
   const avatar =
-    user.authAccounts.find((account) => account.image)?.image ?? undefined
+    user?.authAccounts?.find((account) => account.image)?.image ?? undefined
 
   return (
     <SidebarMenu>
@@ -39,12 +35,15 @@ export const SidebarAppFooter = ({ user, logout }: SidebarAppFooter) => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage src={avatar} alt={user?.name} />
+                <AvatarFallback className="rounded-lg bg-linear-to-br from-primary/20 to-primary/10 uppercase">
+                  {user?.name[0]}
+                  {user?.name[1]}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{user?.name}</span>
+                <span className="truncate text-xs">{user?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -58,17 +57,26 @@ export const SidebarAppFooter = ({ user, logout }: SidebarAppFooter) => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={avatar} alt={user?.name} />
+                  <AvatarFallback className="rounded-lg bg-linear-to-br from-primary/20 to-primary/10 uppercase">
+                    {user?.name[0]}
+                    {user?.name[1]}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{user?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link to="/upgrade">
+                  <Sparkles className="mr-2 h-4 w-4 text-primary" />
+                  Upgrade para PRO
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/profile">
                   <UserIcon className="mr-2 h-4 w-4" />
