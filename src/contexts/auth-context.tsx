@@ -15,15 +15,16 @@ import {
   useRegister,
   type RegisterResponse
 } from '@/http/api/hooks/auth/use-register'
-import { api } from '@/lib/axios'
 import type { User } from '@/models/user'
 import type { LoginSchema } from '@/schemas/auth/login-schema'
 import type { RegisterSchema } from '@/schemas/auth/register-schema'
+import { useLogout } from '@/http/api/hooks/auth/use-logout'
+import { useProfile } from '@/http/api/hooks/auth/use-profile'
 
 interface AuthContextType {
   user: User | null
-  token: string | null
   isAuthenticated: boolean
+  isLoading: boolean
   login: {
     execute: (data: LoginSchema) => Promise<LoginResponse>
     isPending: boolean
@@ -36,7 +37,7 @@ interface AuthContextType {
     execute: (credential: string) => Promise<GoogleOAuthResponse>
     isPending: boolean
   }
-  logout: () => void
+  logout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -47,61 +48,60 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const login = useLogin()
   const register = useRegister()
   const googleOAuth = useGoogleOAuth()
+  const logout = useLogout()
+  const profile = useProfile()
 
   const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  function saveAuthData(user: User, token: string) {
-    setUser(user)
-    setToken(token)
-    localStorage.setItem('user', JSON.stringify(user))
-    localStorage.setItem('token', token)
-  }
+  // Verifica a sessão automaticamente ao montar
+  useEffect(() => {
+    async function fetchProfile() {
+      setIsLoading(true)
+      try {
+        const { data } = await profile.refetch()
+        setUser(data?.user!)
+      } catch {
+        setUser(null)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProfile()
+  }, [])
 
   async function handleLogin(data: LoginSchema) {
     const res = await login.mutateAsync(data)
-    saveAuthData(res.user, res.token)
+    setUser(res.user)
     navigate('/dashboard')
     return res
   }
 
   async function handleRegister(data: RegisterSchema) {
     const res = await register.mutateAsync(data)
-    saveAuthData(res.user, res.token)
+    setUser(res.user)
     navigate('/dashboard')
     return res
   }
 
   async function handleGoogleOAuth(credential: string) {
     const res = await googleOAuth.mutateAsync(credential)
-    saveAuthData(res.user, res.token)
+    setUser(res.user)
     navigate('/dashboard')
     return res
   }
 
-  function handleLogout() {
+  async function handleLogout() {
+    await logout.mutateAsync()
     setUser(null)
-    setToken(null)
-    localStorage.removeItem('user')
-    localStorage.removeItem('token')
-    delete api.defaults.headers.common.Authorization
     navigate('/login')
   }
 
-  useEffect(() => {
-    const user = localStorage.getItem('user')
-    const token = localStorage.getItem('token')
-
-    if (user && token) {
-      setUser(JSON.parse(user))
-      setToken(token)
-    }
-  }, [])
-
   const value: AuthContextType = {
     user,
-    token,
     isAuthenticated: !!user,
+    isLoading,
     login: {
       execute: handleLogin,
       isPending: login.isPending

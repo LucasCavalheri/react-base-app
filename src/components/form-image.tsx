@@ -1,6 +1,6 @@
 export function FormImage() {
   return (
-    <div className="bg-muted relative hidden md:block">
+    <div className="bg-muted relative hidden md:block h-full">
       <img
         src="/placeholder.svg"
         alt="Image"

@@ -1,9 +1,5 @@
 import { AppSidebar } from '@/components/app-sidebar'
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger
-} from '@/components/ui/sidebar'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { useAuth } from '@/contexts/auth-context'
 import { Navigate, Outlet } from 'react-router'
 

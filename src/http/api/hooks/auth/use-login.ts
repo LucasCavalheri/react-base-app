@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import type { User } from '@/models/user'
 import type { LoginSchema } from '@/schemas/auth/login-schema'
@@ -6,14 +6,18 @@ import type { LoginSchema } from '@/schemas/auth/login-schema'
 export interface LoginResponse {
   message: string
   user: User
-  token: string
 }
 
 export function useLogin() {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: async (data: LoginSchema) => {
       const response = await api.post<LoginResponse>('/auth/login', data)
       return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
     }
   })
 }
