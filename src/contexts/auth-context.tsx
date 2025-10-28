@@ -72,14 +72,20 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   async function handleLogin(data: LoginSchema) {
     const res = await login.mutateAsync(data)
-    setUser(res.user)
+
+    const profileRes = await profile.refetch()
+    setUser(profileRes.data?.user ?? res.user)
+
     navigate('/dashboard')
     return res
   }
 
   async function handleRegister(data: RegisterSchema) {
     const res = await register.mutateAsync(data)
-    setUser(res.user)
+
+    const profileRes = await profile.refetch()
+    setUser(profileRes.data?.user ?? res.user)
+
     navigate('/dashboard')
     return res
   }
