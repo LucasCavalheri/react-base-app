@@ -1,5 +1,5 @@
 import { ChevronsUpDown, LogOut, UserIcon } from 'lucide-react'
-import { Avatar, AvatarFallback } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +26,9 @@ interface SidebarAppFooter {
 export const SidebarAppFooter = ({ user, logout }: SidebarAppFooter) => {
   const { isMobile } = useSidebar()
 
+  const avatar =
+    user.authAccounts.find((account) => account.image)?.image ?? undefined
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -36,7 +39,7 @@ export const SidebarAppFooter = ({ user, logout }: SidebarAppFooter) => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
+                <AvatarImage src={avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -55,7 +58,7 @@ export const SidebarAppFooter = ({ user, logout }: SidebarAppFooter) => {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
+                  <AvatarImage src={avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
