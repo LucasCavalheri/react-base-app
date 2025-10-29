@@ -18,11 +18,9 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
       <SidebarHeader>
         <SidebarAppHeader />
       </SidebarHeader>
-      <SidebarSeparator />
       <SidebarContent>
         <SidebarAppContent />
       </SidebarContent>
-      <SidebarSeparator />
       <SidebarFooter className="flex flex-col">
         <SidebarAppFooter />
       </SidebarFooter>

@@ -25,7 +25,7 @@ export function AppLayout() {
         <AppSidebar />
         <main className="flex-1">
           <SidebarTrigger />
-          <div className="ml-5 md:ml-10">
+          <div>
             <Outlet />
           </div>
         </main>

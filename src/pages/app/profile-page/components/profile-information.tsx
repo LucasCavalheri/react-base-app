@@ -57,7 +57,14 @@ export function ProfileInformation() {
 
   const handleSaveProfile = async (data: UpdateProfileSchema) => {
     try {
-      const response = await updateProfileMutateAsync(data)
+      // garante que phone e document não sejam enviados se estiverem vazios
+      const { whatsapp, document, ...rest } = data
+
+      const response = await updateProfileMutateAsync({
+        ...rest,
+        whatsapp: whatsapp || undefined,
+        document: document || undefined
+      })
 
       const updatedUser: User = {
         ...response.user,
@@ -77,18 +84,14 @@ export function ProfileInformation() {
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.status === 409) {
-          profileForm.setError('email', {
-            type: 'manual',
-            message: 'Email já cadastrado'
-          })
           profileForm.reset({
             name: user?.name,
             email: user?.email,
             whatsapp: user?.phone,
             document: user?.document
           })
-          return toast.error('Email já cadastrado', {
-            description: 'Este email já está cadastro por outro usuário'
+          return toast.error('Erro ao atualizar perfil', {
+            description: error?.response?.data?.message
           })
         }
         profileForm.reset({
